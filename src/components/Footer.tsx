@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/ui/Logo";
 
@@ -39,6 +40,12 @@ const socials = [
 ];
 
 export function Footer() {
+  const [year, setYear] = useState(2026);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
   return (
     <footer className="relative py-12 sm:py-16 border-t border-[#1F4D3A]/5">
       <div className="max-w-7xl mx-auto px-6">
@@ -68,7 +75,7 @@ export function Footer() {
                 { label: "How It Works", href: "/#timeline" },
                 { label: "Journey", href: "/#journey" },
                 { label: "Roadmap", href: "/#roadmap" },
-                { label: "Waitlist", href: "/#waitlist" },
+                { label: "Early Access", href: "/#early-access" },
                 { label: "FAQ", href: "/#faq" },
               ].map((link) => (
                 <a
@@ -147,7 +154,7 @@ export function Footer() {
           </div>
 
           <p className="text-xs" style={{ color: "#2D2D2D/30" }}>
-            &copy; {new Date().getFullYear()} KISSA. All rights reserved.
+            &copy; {year} KISSA. All rights reserved.
           </p>
         </div>
       </div>

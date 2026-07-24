@@ -42,8 +42,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true });
   } catch (error: unknown) {
     const message =
-      error instanceof Error ? error.message : "Failed to submit to waitlist";
-    console.error("Waitlist API Error:", error);
+      error instanceof Error ? error.message : "Failed to submit to early access";
+    console.error("Early Access API Error:", error);
 
     return NextResponse.json({ error: message }, { status: 500 });
   }

@@ -6,7 +6,7 @@ import confetti from "canvas-confetti";
 import { SquishyButton } from "@/components/ui/SquishyButton";
 import { SproutIcon, QuillIcon, PaperPlaneIcon, LeafIcon, StarIcon } from "@/components/journey/ChapterIcons";
 
-export function WaitlistSection() {
+export function EarlyAccessSection() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -21,7 +21,7 @@ export function WaitlistSection() {
     setErrorMsg("");
 
     try {
-      const res = await fetch("/api/waitlist", {
+      const res = await fetch("/api/early-access", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -30,7 +30,7 @@ export function WaitlistSection() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || "Failed to join waitlist. Please try again.");
+        throw new Error(data.error || "Failed to sign up for early access. Please try again.");
       }
 
       // Confetti burst
@@ -74,7 +74,7 @@ export function WaitlistSection() {
 
   return (
     <section
-      id="waitlist"
+      id="early-access"
       className="relative py-16 sm:py-24 lg:py-32 overflow-hidden"
     >
       <div className="absolute inset-0 pointer-events-none">
@@ -145,8 +145,8 @@ export function WaitlistSection() {
                     viewport={{ once: true }}
                     transition={{ delay: 0.4 }}
                   >
-                    Join the waitlist and be the first to know when Kissa launches.
-                    Your story starts here.
+                    Get early access and help shape the story.<br />
+                    Early access members get to experience Kissa for free.
                   </motion.p>
 
                   <motion.form
@@ -231,7 +231,7 @@ export function WaitlistSection() {
                   We can&apos;t wait to hear your story.
                 </h3>
                 <p className="text-sm sm:text-base" style={{ color: "#2D2D2D/70" }}>
-                  You&apos;re on the list! We&apos;ll let you know when Kissa is ready.
+                  You&apos;re in! We&apos;ll let you know when Kissa is ready.
                 </p>
               </motion.div>
             </motion.div>

@@ -67,7 +67,7 @@ export function Navbar() {
           style={{ backgroundColor: "#1F4D3A", color: "#FAF8F3" }}
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.96 }}
-          onClick={() => scrollTo("waitlist")}
+          onClick={() => scrollTo("early-access")}
         >
           Join
         </motion.button>

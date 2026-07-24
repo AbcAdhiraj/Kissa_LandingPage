@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     q: "When will KISSA launch?",
-    a: "We're working hard to bring KISSA to life. Join the waitlist above and you'll be the first to know when we launch.",
+    a: "We're working hard to bring KISSA to life. Get early access above and you'll be the first to know when we launch.",
   },
 ];
 

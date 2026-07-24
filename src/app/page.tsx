@@ -5,7 +5,7 @@ import { Navbar } from "@/components/navbar/Navbar";
 import { HeroSection } from "@/components/hero/HeroSection";
 import { TimelineSection } from "@/components/TimelineSection";
 import { LifeJourneySection } from "@/components/journey/LifeJourneySection";
-import { WaitlistSection } from "@/components/waitlist/WaitlistSection";
+import { EarlyAccessSection } from "@/components/early-access/EarlyAccessSection";
 import { FaqSection } from "@/components/FaqSection";
 import { RoadmapSection } from "@/components/RoadmapSection";
 import { ScrollProgress } from "@/components/ScrollProgress";
@@ -31,7 +31,7 @@ export default function Home() {
         <LifeJourneySection />
         <TimelineSection />
         <RoadmapSection />
-        <WaitlistSection />
+        <EarlyAccessSection />
         <FaqSection />
       </main>
 

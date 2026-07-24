@@ -5,8 +5,8 @@ import { HeroIllustration } from "./HeroIllustration";
 import { SquishyButton } from "@/components/ui/SquishyButton";
 
 export function HeroSection() {
-  const scrollToWaitlist = () => {
-    document.getElementById("waitlist")?.scrollIntoView({ behavior: "smooth" });
+  const scrollToEarlyAccess = () => {
+    document.getElementById("early-access")?.scrollIntoView({ behavior: "smooth" });
   };
 
   const scrollToTimeline = () => {
@@ -77,8 +77,8 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 0.6 }}
             >
-              <SquishyButton variant="primary" onClick={scrollToWaitlist}>
-                Join the Waitlist
+              <SquishyButton variant="primary" onClick={scrollToEarlyAccess}>
+                Get Early Access
                 <span className="text-lg">→</span>
               </SquishyButton>
               <SquishyButton variant="secondary" onClick={scrollToTimeline}>
