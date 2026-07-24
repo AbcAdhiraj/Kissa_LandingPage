@@ -25,7 +25,7 @@ const steps = [
   {
     icon: WeaveIcon,
     title: "Weave",
-    description: "Your stories are woven into a beautiful tapestry of who you truly are.",
+    description: "A digital avatar is created with your voice, tone and mannerisms — a living reflection of you.",
     accent: "#C4B8D8",
   },
   {

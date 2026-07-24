@@ -9,47 +9,67 @@ import { BookIcon, HeartIcon, SproutIcon, QuillIcon, PaperPlaneIcon, LeafIcon, S
 export function WaitlistSection() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const formRef = useRef<HTMLDivElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes("@")) return;
 
-    setIsAnimating(true);
+    setIsSubmitting(true);
+    setErrorMsg("");
 
-    // Confetti burst
-    const rect = formRef.current?.getBoundingClientRect();
-    if (rect) {
-      confetti({
-        particleCount: 120,
-        spread: 80,
-        origin: {
-          x: (rect.left + rect.width / 2) / window.innerWidth,
-          y: (rect.top + rect.height / 2) / window.innerHeight,
-        },
-        colors: ["#1F4D3A", "#F5C542", "#E87060", "#7EC8E3", "#C4B8D8"],
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
       });
 
-      // Second burst after a delay
-      setTimeout(() => {
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to join waitlist. Please try again.");
+      }
+
+      // Confetti burst
+      const rect = formRef.current?.getBoundingClientRect();
+      if (rect) {
         confetti({
-          particleCount: 60,
-          spread: 120,
+          particleCount: 120,
+          spread: 80,
           origin: {
             x: (rect.left + rect.width / 2) / window.innerWidth,
             y: (rect.top + rect.height / 2) / window.innerHeight,
           },
-          colors: ["#F5C542", "#E87060", "#A8C4A0"],
+          colors: ["#1F4D3A", "#F5C542", "#E87060", "#7EC8E3", "#C4B8D8"],
         });
-      }, 300);
-    }
 
-    // Show success after animation
-    setTimeout(() => {
-      setSubmitted(true);
-      setIsAnimating(false);
-    }, 1200);
+        // Second burst after a delay
+        setTimeout(() => {
+          confetti({
+            particleCount: 60,
+            spread: 120,
+            origin: {
+              x: (rect.left + rect.width / 2) / window.innerWidth,
+              y: (rect.top + rect.height / 2) / window.innerHeight,
+            },
+            colors: ["#F5C542", "#E87060", "#A8C4A0"],
+          });
+        }, 300);
+      }
+
+      // Show success screen after short animation
+      setTimeout(() => {
+        setSubmitted(true);
+        setIsSubmitting(false);
+      }, 1000);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "An unexpected error occurred.";
+      setErrorMsg(message);
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -143,13 +163,37 @@ export function WaitlistSection() {
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="your@email.com"
                       required
-                      className="flex-1 px-5 sm:px-6 py-3 sm:py-4 rounded-full border-2 border-[#1F4D3A]/10 bg-white/80 focus:outline-none focus:border-[#1F4D3A]/40 focus:bg-white transition-all text-sm sm:text-base"
+                      disabled={isSubmitting}
+                      className="flex-1 px-5 sm:px-6 py-3 sm:py-4 rounded-full border-2 border-[#1F4D3A]/10 bg-white/80 focus:outline-none focus:border-[#1F4D3A]/40 focus:bg-white transition-all text-sm sm:text-base disabled:opacity-60"
                       style={{ color: "#2D2D2D" }}
                     />
-                    <SquishyButton variant="primary" type="submit">
-                      Plant It <SproutIcon />
+                    <SquishyButton
+                      variant="primary"
+                      type="submit"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          Planting...
+                          <span className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent ml-1" />
+                        </>
+                      ) : (
+                        <>
+                          Plant It <SproutIcon />
+                        </>
+                      )}
                     </SquishyButton>
                   </motion.form>
+
+                  {errorMsg && (
+                    <motion.p
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-red-600 text-sm font-medium mt-3"
+                    >
+                      {errorMsg}
+                    </motion.p>
+                  )}
                 </div>
               </div>
             </motion.div>

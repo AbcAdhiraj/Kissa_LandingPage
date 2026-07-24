@@ -9,6 +9,7 @@ interface SquishyButtonProps {
   onClick?: () => void;
   type?: "button" | "submit";
   className?: string;
+  disabled?: boolean;
 }
 
 export function SquishyButton({
@@ -17,9 +18,10 @@ export function SquishyButton({
   onClick,
   type = "button",
   className = "",
+  disabled = false,
 }: SquishyButtonProps) {
   const baseClasses =
-    "rounded-full font-semibold text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4 inline-flex items-center justify-center gap-2 cursor-pointer select-none";
+    "rounded-full font-semibold text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4 inline-flex items-center justify-center gap-2 cursor-pointer select-none disabled:opacity-60 disabled:cursor-not-allowed";
   const variantClasses = {
     primary:
       "bg-[#1F4D3A] text-[#FAF8F3] hover:bg-[#2A5F48] shadow-lg shadow-[#1F4D3A]/20",
@@ -31,9 +33,10 @@ export function SquishyButton({
     <motion.button
       type={type}
       onClick={onClick}
+      disabled={disabled}
       className={`${baseClasses} ${variantClasses[variant]} ${className}`}
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={disabled ? undefined : { scale: 1.03 }}
+      whileTap={disabled ? undefined : { scale: 0.95 }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
