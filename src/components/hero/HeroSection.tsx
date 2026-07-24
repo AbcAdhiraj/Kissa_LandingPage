@@ -9,8 +9,8 @@ export function HeroSection() {
     document.getElementById("waitlist")?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const scrollToJourney = () => {
-    document.getElementById("journey")?.scrollIntoView({ behavior: "smooth" });
+  const scrollToTimeline = () => {
+    document.getElementById("timeline")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -81,7 +81,7 @@ export function HeroSection() {
                 Join the Waitlist
                 <span className="text-lg">→</span>
               </SquishyButton>
-              <SquishyButton variant="secondary" onClick={scrollToJourney}>
+              <SquishyButton variant="secondary" onClick={scrollToTimeline}>
                 See Our Vision
               </SquishyButton>
             </motion.div>

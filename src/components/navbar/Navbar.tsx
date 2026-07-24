@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 const links = [
   { label: "Home", target: "hero" },
   { label: "How It Works", target: "timeline" },
-  { label: "Your Story", target: "journey" },
+  { label: "Roadmap", target: "roadmap" },
 ];
 
 export function Navbar() {

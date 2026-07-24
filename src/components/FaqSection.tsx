@@ -86,7 +86,7 @@ function FaqItem({ faq, index }: { faq: { q: string; a: string }; index: number 
 
 export function FaqSection() {
   return (
-    <section className="relative py-16 sm:py-24 lg:py-32 overflow-hidden">
+    <section id="faq" className="relative py-16 sm:py-24 lg:py-32 overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-20 right-10 w-72 h-72 rounded-full bg-[#F5C542]/5 blur-3xl" />
         <div className="absolute bottom-20 left-10 w-64 h-64 rounded-full bg-[#A8C4A0]/5 blur-3xl" />

@@ -7,6 +7,8 @@ import { TimelineSection } from "@/components/TimelineSection";
 import { LifeJourneySection } from "@/components/journey/LifeJourneySection";
 import { WaitlistSection } from "@/components/waitlist/WaitlistSection";
 import { FaqSection } from "@/components/FaqSection";
+import { RoadmapSection } from "@/components/RoadmapSection";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import { Footer } from "@/components/Footer";
 import { CursorSparkles } from "@/components/effects/CursorSparkles";
 import { FloatingBirds } from "@/components/effects/FloatingBirds";
@@ -26,13 +28,15 @@ export default function Home() {
 
       <main>
         <HeroSection />
-        <TimelineSection />
         <LifeJourneySection />
+        <TimelineSection />
+        <RoadmapSection />
         <WaitlistSection />
         <FaqSection />
       </main>
 
       <Footer />
+      <ScrollProgress />
     </SmoothScroll>
   );
 }
