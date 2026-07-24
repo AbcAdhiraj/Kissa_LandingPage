@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { SquishyButton } from "@/components/ui/SquishyButton";
-import { BookIcon, HeartIcon, SproutIcon, QuillIcon, PaperPlaneIcon, LeafIcon, StarIcon } from "@/components/journey/ChapterIcons";
+import { SproutIcon, QuillIcon, PaperPlaneIcon, LeafIcon, StarIcon } from "@/components/journey/ChapterIcons";
 
 export function WaitlistSection() {
   const [email, setEmail] = useState("");
@@ -211,15 +211,7 @@ export function WaitlistSection() {
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
               >
-                <div className="mb-6 scale-[3] origin-center"><BookIcon /></div>
-                <motion.div
-                  className="absolute -top-4 -right-4"
-                  initial={{ x: 0, y: 0, opacity: 0 }}
-                  animate={{ x: 100, y: -100, opacity: 0, rotate: 45 }}
-                  transition={{ duration: 1.5, delay: 0.5, ease: "easeInOut" }}
-                >
-                  <PaperPlaneIcon />
-                </motion.div>
+                <div className="mb-6 scale-[3] origin-center"><PaperPlaneIcon /></div>
               </motion.div>
 
               <motion.div
@@ -236,7 +228,7 @@ export function WaitlistSection() {
                     fontFamily: "var(--font-plus-jakarta)",
                   }}
                 >
-                  We can&apos;t wait to hear your story. <HeartIcon />
+                  We can&apos;t wait to hear your story.
                 </h3>
                 <p className="text-sm sm:text-base" style={{ color: "#2D2D2D/70" }}>
                   You&apos;re on the list! We&apos;ll let you know when Kissa is ready.
