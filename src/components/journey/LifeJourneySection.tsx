@@ -19,6 +19,7 @@ interface Chapter {
   years: string;
   accent: string;
   content: string;
+  shortContent: string;
   doodle: string;
   span: "normal" | "wide";
 }
@@ -30,6 +31,7 @@ const chapters: Chapter[] = [
     years: "0–12",
     accent: "#F5EDD6",
     content: "Playing in the rain, scraped knees, and bedtime stories that shaped who you became.",
+    shortContent: "Scraped knees and bedtime stories.",
     doodle: "innocence · wonder · home",
     span: "wide",
   },
@@ -39,6 +41,7 @@ const chapters: Chapter[] = [
     years: "13–18",
     accent: "#A8C4A0",
     content: "First friendships, late-night study sessions, and the teachers who believed in you.",
+    shortContent: "Friendships and late-night study sessions.",
     doodle: "learning · curiosity · growth",
     span: "normal",
   },
@@ -48,6 +51,7 @@ const chapters: Chapter[] = [
     years: "19–22",
     accent: "#C4B8D8",
     content: "Discovering who you really were. The all-nighters, the road trips, the freedom.",
+    shortContent: "All-nighters, road trips, and freedom.",
     doodle: "discovery · freedom · late nights",
     span: "normal",
   },
@@ -57,6 +61,7 @@ const chapters: Chapter[] = [
     years: "Any age",
     accent: "#E8A0A8",
     content: "The butterflies. The heartbreak. The one who made it all make sense.",
+    shortContent: "Butterflies, heartbreak, and the one.",
     doodle: "connection · devotion · warmth",
     span: "normal",
   },
@@ -66,6 +71,7 @@ const chapters: Chapter[] = [
     years: "20s–40s",
     accent: "#F0A870",
     content: "The dreams you chased, the risks you took, and the late nights that paid off.",
+    shortContent: "Dreams chased and risks taken.",
     doodle: "ambition · purpose · achievement",
     span: "wide",
   },
@@ -75,6 +81,7 @@ const chapters: Chapter[] = [
     years: "30s+",
     accent: "#F5C542",
     content: "Tiny hands, lullabies, and traditions that will live on for generations.",
+    shortContent: "Tiny hands and lullabies.",
     doodle: "roots · nurture · belonging",
     span: "normal",
   },
@@ -84,6 +91,7 @@ const chapters: Chapter[] = [
     years: "Any age",
     accent: "#7EC8E3",
     content: "The places that changed you. The strangers who became friends. The stories you brought home.",
+    shortContent: "Places that changed you.",
     doodle: "wander · explore · discover",
     span: "normal",
   },
@@ -93,6 +101,7 @@ const chapters: Chapter[] = [
     years: "50s+",
     accent: "#C4B8D8",
     content: "The lessons learned. The advice you'd give your younger self. The peace you found.",
+    shortContent: "Lessons learned and peace found.",
     doodle: "insight · clarity · grace",
     span: "normal",
   },
@@ -102,6 +111,7 @@ const chapters: Chapter[] = [
     years: "Forever",
     accent: "#F5EDD6",
     content: "What you leave behind isn't just things. It's the stories. The laughter. The love.",
+    shortContent: "The stories, the laughter, the love.",
     doodle: "forever · story · light",
     span: "wide",
   },
@@ -159,10 +169,16 @@ export function LifeJourneySection() {
                 doodle={ch.doodle}
               >
                 <p
-                  className="text-sm leading-relaxed mb-2"
+                  className="text-sm leading-relaxed mb-2 hidden sm:block"
                   style={{ color: "#2D2D2D" }}
                 >
                   {ch.content}
+                </p>
+                <p
+                  className="text-sm leading-relaxed mb-2 sm:hidden"
+                  style={{ color: "#2D2D2D" }}
+                >
+                  {ch.shortContent}
                 </p>
                 <p className="text-xl">{ch.doodle}</p>
               </JourneyCard>

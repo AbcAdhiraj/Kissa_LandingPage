@@ -34,7 +34,7 @@ export function HeroSection() {
               style={{ color: "#1F4D3A", fontFamily: "var(--font-plus-jakarta)" }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
+              transition={{ duration: 0.6 }}
             >
               Everybody has a
               <br />
@@ -63,7 +63,7 @@ export function HeroSection() {
               style={{ color: "#2D2D2D/80" }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.6 }}
+              transition={{ duration: 0.6 }}
             >
               We at KISSA believe the most precious things we leave behind are our stories.
                 That's why we're building a place where your voice, memories, and moments can live on.
@@ -75,7 +75,7 @@ export function HeroSection() {
               className="flex flex-col sm:flex-row gap-3 sm:gap-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.6 }}
+              transition={{ duration: 0.6 }}
             >
               <SquishyButton variant="primary" onClick={scrollToEarlyAccess}>
                 Get Early Access
@@ -91,7 +91,7 @@ export function HeroSection() {
             className="relative"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
             <HeroIllustration />
           </motion.div>

@@ -116,7 +116,7 @@ export function EarlyAccessSection() {
                     initial={{ opacity: 0, y: 10 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: 0.2 }}
+                    transition={{ delay: 0 }}
                   >
                     <QuillIcon /> Start Writing
                   </motion.span>
@@ -130,7 +130,7 @@ export function EarlyAccessSection() {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: 0.3 }}
+                    transition={{ delay: 0 }}
                   >
                     Plant the first page of
                     <br />
@@ -143,7 +143,7 @@ export function EarlyAccessSection() {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: 0.4 }}
+                    transition={{ delay: 0 }}
                   >
                     Get early access and help shape the story.<br />
                     Early access members get to experience Kissa for free.
@@ -155,7 +155,7 @@ export function EarlyAccessSection() {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: 0.5 }}
+                    transition={{ delay: 0 }}
                   >
                     <input
                       type="email"

@@ -58,8 +58,7 @@ function MvpCard({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{
-          duration: 0.6,
-          delay: index * 0.15,
+          duration: 0.5,
           ease: [0.16, 1, 0.3, 1],
         }}
       >
@@ -76,7 +75,7 @@ function MvpCard({
                   className="absolute top-3 right-3 z-10"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.15 + 0.4 }}
+                  transition={{ delay: 0.2 }}
                 >
                   <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider shadow-sm border border-white/60"
                     style={{ backgroundColor: "#1F4D3A", color: "#FAF8F3" }}
