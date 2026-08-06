@@ -17,12 +17,14 @@ function jsonResponse(body: unknown, status = 200) {
 let fetchMock: ReturnType<typeof vi.fn>;
 
 beforeEach(() => {
+  vi.spyOn(console, "error").mockImplementation(() => {});
   fetchMock = vi.fn().mockResolvedValue(jsonResponse({ success: true }));
   vi.stubGlobal("fetch", fetchMock);
 });
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
   confettiMock.mockReset();
 });
 
@@ -73,6 +75,22 @@ describe("EarlyAccessSection", () => {
     await waitFor(() => expect(confettiMock).toHaveBeenCalledTimes(2));
   });
 
+  it("still reaches the success screen when confetti throws", async () => {
+    confettiMock.mockImplementation(() => {
+      throw new Error("canvas unavailable");
+    });
+    const { user, input, submit } = setup();
+
+    await user.type(input, "person@example.com");
+    await user.click(submit());
+
+    expect(
+      await screen.findByText("We can't wait to hear your story.", undefined, {
+        timeout: 4000,
+      })
+    ).toBeInTheDocument();
+  });
+
   it("shows the server error message and re-enables the form", async () => {
     fetchMock.mockResolvedValue(jsonResponse({ error: "Email already signed up." }, 400));
     const { user, input, submit } = setup();
@@ -85,7 +103,7 @@ describe("EarlyAccessSection", () => {
     expect(confettiMock).not.toHaveBeenCalled();
   });
 
-  it("falls back to a generic message when the error response has no message", async () => {
+  it("falls back to a status-bearing message when the error response has no message", async () => {
     fetchMock.mockResolvedValue(jsonResponse({}, 500));
     const { user, input, submit } = setup();
 
@@ -93,11 +111,27 @@ describe("EarlyAccessSection", () => {
     await user.click(submit());
 
     expect(
-      await screen.findByText("Failed to sign up for early access. Please try again.")
+      await screen.findByText(
+        "Failed to sign up for early access (status 500). Please try again."
+      )
     ).toBeInTheDocument();
   });
 
-  it("surfaces network failures", async () => {
+  it("explains an unreachable server", async () => {
+    fetchMock.mockRejectedValue(new TypeError("Failed to fetch"));
+    const { user, input, submit } = setup();
+
+    await user.type(input, "person@example.com");
+    await user.click(submit());
+
+    expect(
+      await screen.findByText(
+        "Could not reach the server. Please check your connection and try again."
+      )
+    ).toBeInTheDocument();
+  });
+
+  it("surfaces other errors", async () => {
     fetchMock.mockRejectedValue(new Error("network down"));
     const { user, input, submit } = setup();
 
