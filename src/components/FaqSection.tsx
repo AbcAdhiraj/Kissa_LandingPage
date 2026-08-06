@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 
 const faqs = [
   {
@@ -93,28 +94,12 @@ export function FaqSection() {
       </div>
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
-        <motion.div
-          className="text-center mb-12 sm:mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <span
-            className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-[#1F4D3A]/5 text-[#1F4D3A] text-xs sm:text-sm font-semibold mb-3 sm:mb-4"
-          >
-            Got Questions?
-          </span>
-          <h2
-            className="text-3xl sm:text-4xl lg:text-6xl font-extrabold tracking-tight"
-            style={{
-              color: "#1F4D3A",
-              fontFamily: "var(--font-plus-jakarta)",
-            }}
-          >
-            Frequently Asked Questions
-          </h2>
-        </motion.div>
+        <SectionHeader
+          animate
+          className="mb-12 sm:mb-16"
+          eyebrow="Got Questions?"
+          title="Frequently Asked Questions"
+        />
 
         <div
           className="rounded-2xl px-6 sm:px-10"

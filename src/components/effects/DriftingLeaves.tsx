@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSpawner } from "@/hooks/useSpawner";
+import { randomBetween, randomChoice } from "@/lib/utils";
 
 interface Leaf {
   id: number;
@@ -12,38 +13,25 @@ interface Leaf {
   rotation: number;
 }
 
+const LEAF_COLORS = ["#A8C4A0", "#F0A870", "#F5C542", "#C4B8D8"];
+
 export function DriftingLeaves() {
-  const [leaves, setLeaves] = useState<Leaf[]>([]);
-
-  useEffect(() => {
-    const colors = ["#A8C4A0", "#F0A870", "#F5C542", "#C4B8D8"];
-
-    const spawnLeaf = () => {
-      const leaf: Leaf = {
-        id: Date.now() + Math.random(),
-        left: Math.random() * 100,
-        size: Math.random() * 10 + 8,
-        duration: Math.random() * 8 + 10,
-        delay: Math.random() * 3,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        rotation: Math.random() * 360,
-      };
-      setLeaves((prev) => [...prev.slice(-5), leaf]);
-
-      setTimeout(() => {
-        setLeaves((prev) => prev.filter((l) => l.id !== leaf.id));
-      }, (leaf.duration + leaf.delay + 1) * 1000);
-    };
-
-    // Spawn initial leaves
-    for (let i = 0; i < 3; i++) {
-      setTimeout(spawnLeaf, i * 2000);
-    }
-
-    // Spawn new leaves periodically
-    const interval = setInterval(spawnLeaf, 4000);
-    return () => clearInterval(interval);
-  }, []);
+  const leaves = useSpawner<Leaf>({
+    create: () => ({
+      id: Date.now() + Math.random(),
+      left: randomBetween(0, 100),
+      size: randomBetween(8, 18),
+      duration: randomBetween(10, 18),
+      delay: randomBetween(0, 3),
+      color: randomChoice(LEAF_COLORS),
+      rotation: randomBetween(0, 360),
+    }),
+    lifetime: (leaf) => (leaf.duration + leaf.delay + 1) * 1000,
+    interval: 4000,
+    maxAlive: 5,
+    initialCount: 3,
+    initialStagger: 2000,
+  });
 
   return (
     <div className="fixed inset-0 pointer-events-none z-40 overflow-hidden">
