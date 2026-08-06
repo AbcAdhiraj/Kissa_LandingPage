@@ -1,11 +1,38 @@
 import { NextResponse } from "next/server";
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const MAX_EMAIL_LENGTH = 254;
 const WEBHOOK_TIMEOUT_MS = 10_000;
 
-const GENERIC_ERROR = "Something went wrong. Please try again.";
+const GENERIC_ERROR = "Something went wrong. Please try again later.";
+
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX_REQUESTS = 5;
+const requestLog = new Map<string, number[]>();
+
+function isRateLimited(key: string): boolean {
+  const now = Date.now();
+  const recent = (requestLog.get(key) ?? []).filter(
+    (timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS
+  );
+  recent.push(now);
+  requestLog.set(key, recent);
+  return recent.length > RATE_LIMIT_MAX_REQUESTS;
+}
+
+function clientKey(request: Request): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  return forwarded?.split(",")[0]?.trim() || "unknown";
+}
 
 export async function POST(request: Request) {
+  if (isRateLimited(clientKey(request))) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again in a minute." },
+      { status: 429 }
+    );
+  }
+
   let email: unknown;
 
   try {
@@ -19,14 +46,18 @@ export async function POST(request: Request) {
     );
   }
 
-  if (typeof email !== "string" || !EMAIL_PATTERN.test(email.trim())) {
+  if (
+    typeof email !== "string" ||
+    email.length > MAX_EMAIL_LENGTH ||
+    !EMAIL_PATTERN.test(email.trim())
+  ) {
     return NextResponse.json(
       { error: "Please enter a valid email address." },
       { status: 400 }
     );
   }
 
-  const normalizedEmail = email.trim();
+  const normalizedEmail = email.trim().toLowerCase();
   const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL;
 
   if (!webhookUrl || webhookUrl.includes("YOUR_SCRIPT_ID")) {
@@ -48,10 +79,7 @@ export async function POST(request: Request) {
     console.warn(
       "Early Access API: GOOGLE_SHEET_WEBHOOK_URL is not set or uses the placeholder value in .env.local; signup was not persisted"
     );
-    return NextResponse.json({
-      success: true,
-      warning: "Google Sheet Webhook URL not configured in .env.local",
-    });
+    return NextResponse.json({ success: true });
   }
 
   let response: Response;
