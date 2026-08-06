@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const MAX_EMAIL_LENGTH = 254;
+const WEBHOOK_TIMEOUT_MS = 10_000;
+
+const GENERIC_ERROR = "Something went wrong. Please try again later.";
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 5;
@@ -31,11 +34,16 @@ export async function POST(request: Request) {
   }
 
   let email: unknown;
+
   try {
     const body = await request.json();
-    email = (body as { email?: unknown })?.email;
-  } catch {
-    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+    email = (body as { email?: unknown } | null)?.email;
+  } catch (error) {
+    console.error("Early Access API: invalid JSON body", error);
+    return NextResponse.json(
+      { error: "Invalid request body." },
+      { status: 400 }
+    );
   }
 
   if (
@@ -50,18 +58,34 @@ export async function POST(request: Request) {
   }
 
   const normalizedEmail = email.trim().toLowerCase();
+  const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL;
 
-  try {
-    const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL;
-
-    if (!webhookUrl || webhookUrl.includes("YOUR_SCRIPT_ID")) {
-      console.warn(
-        "GOOGLE_SHEET_WEBHOOK_URL is not set or using placeholder value in .env.local"
+  if (!webhookUrl || webhookUrl.includes("YOUR_SCRIPT_ID")) {
+    // Never pretend the signup succeeded in production: the address would be
+    // lost with no trace for the user or the operator.
+    if (process.env.NODE_ENV === "production") {
+      console.error(
+        "Early Access API: GOOGLE_SHEET_WEBHOOK_URL is not configured; rejecting signup"
       );
-      return NextResponse.json({ success: true });
+      return NextResponse.json(
+        {
+          error:
+            "Early access signups are temporarily unavailable. Please try again later.",
+        },
+        { status: 503 }
+      );
     }
 
-    const response = await fetch(webhookUrl, {
+    console.warn(
+      "Early Access API: GOOGLE_SHEET_WEBHOOK_URL is not set or uses the placeholder value in .env.local; signup was not persisted"
+    );
+    return NextResponse.json({ success: true });
+  }
+
+  let response: Response;
+
+  try {
+    response = await fetch(webhookUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -69,19 +93,32 @@ export async function POST(request: Request) {
       body: JSON.stringify({ email: normalizedEmail }),
       // Follow redirects since Google Apps Script redirects after POST
       redirect: "follow",
+      signal: AbortSignal.timeout(WEBHOOK_TIMEOUT_MS),
     });
-
-    if (!response.ok) {
-      throw new Error(`Webhook responded with status ${response.status}`);
-    }
-
-    return NextResponse.json({ success: true });
-  } catch (error: unknown) {
-    console.error("Early Access API Error:", error);
-
+  } catch (error) {
+    const timedOut = error instanceof Error && error.name === "TimeoutError";
+    console.error(
+      `Early Access API: webhook request ${timedOut ? "timed out" : "failed"}`,
+      error
+    );
     return NextResponse.json(
-      { error: "Something went wrong. Please try again later." },
-      { status: 500 }
+      {
+        error: timedOut
+          ? "The signup service took too long to respond. Please try again."
+          : GENERIC_ERROR,
+      },
+      { status: 502 }
     );
   }
+
+  if (!response.ok) {
+    const detail = await response.text().catch(() => "<unreadable body>");
+    console.error(
+      `Early Access API: webhook responded with status ${response.status}`,
+      detail
+    );
+    return NextResponse.json({ error: GENERIC_ERROR }, { status: 502 });
+  }
+
+  return NextResponse.json({ success: true });
 }
