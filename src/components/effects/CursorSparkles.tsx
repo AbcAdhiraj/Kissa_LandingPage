@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { randomBetween, randomChoice } from "@/lib/utils";
 
 interface Sparkle {
   id: number;
@@ -24,8 +25,8 @@ export function CursorSparkles() {
         id: nextId.current++,
         x: e.clientX,
         y: e.clientY,
-        size: Math.random() * 6 + 3,
-        color: colors[Math.floor(Math.random() * colors.length)],
+        size: randomBetween(3, 9),
+        color: randomChoice(colors),
         createdAt: Date.now(),
       };
 

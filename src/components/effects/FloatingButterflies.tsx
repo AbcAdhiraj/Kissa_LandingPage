@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSpawner } from "@/hooks/useSpawner";
+import { randomBetween } from "@/lib/utils";
 
 interface Butterfly {
   id: number;
@@ -11,31 +12,20 @@ interface Butterfly {
 }
 
 export function FloatingButterflies() {
-  const [butterflies, setButterflies] = useState<Butterfly[]>([]);
-
-  useEffect(() => {
-    const spawn = () => {
-      const bfly: Butterfly = {
-        id: Date.now() + Math.random(),
-        top: Math.random() * 40 + 30,
-        left: Math.random() * 80 + 10,
-        duration: Math.random() * 6 + 8,
-        delay: Math.random() * 3,
-      };
-      setButterflies((prev) => [...prev.slice(-2), bfly]);
-
-      setTimeout(() => {
-        setButterflies((prev) => prev.filter((b) => b.id !== bfly.id));
-      }, (bfly.duration + bfly.delay + 2) * 1000);
-    };
-
-    for (let i = 0; i < 2; i++) {
-      setTimeout(spawn, i * 5000);
-    }
-
-    const interval = setInterval(spawn, 12000);
-    return () => clearInterval(interval);
-  }, []);
+  const butterflies = useSpawner<Butterfly>({
+    create: () => ({
+      id: Date.now() + Math.random(),
+      top: randomBetween(30, 70),
+      left: randomBetween(10, 90),
+      duration: randomBetween(8, 14),
+      delay: randomBetween(0, 3),
+    }),
+    lifetime: (bf) => (bf.duration + bf.delay + 2) * 1000,
+    interval: 12000,
+    maxAlive: 2,
+    initialCount: 2,
+    initialStagger: 5000,
+  });
 
   return (
     <div className="pointer-events-none z-30">

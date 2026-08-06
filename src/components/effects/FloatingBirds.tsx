@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSpawner } from "@/hooks/useSpawner";
+import { randomBetween } from "@/lib/utils";
 
 interface Bird {
   id: number;
@@ -10,25 +11,17 @@ interface Bird {
 }
 
 export function FloatingBirds() {
-  const [birds, setBirds] = useState<Bird[]>([]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const newBird: Bird = {
-        id: Date.now(),
-        top: Math.random() * 60 + 5,
-        speed: Math.random() * 4 + 6,
-        delay: Math.random() * 2,
-      };
-      setBirds((prev) => [...prev.slice(-2), newBird]);
-
-      setTimeout(() => {
-        setBirds((prev) => prev.filter((b) => b.id !== newBird.id));
-      }, (newBird.speed + 2) * 1000);
-    }, 8000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const birds = useSpawner<Bird>({
+    create: () => ({
+      id: Date.now(),
+      top: randomBetween(5, 65),
+      speed: randomBetween(6, 10),
+      delay: randomBetween(0, 2),
+    }),
+    lifetime: (bird) => (bird.speed + 2) * 1000,
+    interval: 8000,
+    maxAlive: 2,
+  });
 
   return (
     <div className="fixed inset-0 pointer-events-none z-40 overflow-hidden">

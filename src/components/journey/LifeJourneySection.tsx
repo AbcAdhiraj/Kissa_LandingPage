@@ -1,6 +1,7 @@
 "use client";
 
 import { JourneyCard } from "./JourneyCard";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 import {
   SproutIcon,
   BookIcon,
@@ -126,27 +127,19 @@ export function LifeJourneySection() {
       </div>
 
       <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center mb-10 sm:mb-12 lg:mb-16">
-          <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-[#F5C542]/10 text-[#1F4D3A] text-xs sm:text-sm font-semibold mb-3 sm:mb-4">
-            <BookIcon />
-            Your Story, Chapter by Chapter
-          </span>
-          <h2
-            className="text-3xl sm:text-4xl lg:text-6xl font-extrabold tracking-tight mb-3 sm:mb-4"
-            style={{
-              color: "#1F4D3A",
-              fontFamily: "var(--font-plus-jakarta)",
-            }}
-          >
-            The Life Journey
-          </h2>
-          <p
-            className="text-sm sm:text-base lg:text-lg max-w-xl mx-auto px-4"
-            style={{ color: "#2D2D2D/70" }}
-          >
-            Every life is a story worth preserving. Tap any chapter to explore.
-          </p>
-        </div>
+        <SectionHeader
+          className="mb-10 sm:mb-12 lg:mb-16"
+          eyebrowClassName="bg-[#F5C542]/10 text-[#1F4D3A]"
+          eyebrow={
+            <>
+              <BookIcon />
+              Your Story, Chapter by Chapter
+            </>
+          }
+          title="The Life Journey"
+          titleClassName="mb-3 sm:mb-4"
+          subtitle="Every life is a story worth preserving. Tap any chapter to explore."
+        />
 
         {/* Bento grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">

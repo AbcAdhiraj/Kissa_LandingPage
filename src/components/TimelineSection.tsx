@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 import {
   CollectionIcon,
   ChatIcon,
@@ -45,28 +46,13 @@ export function TimelineSection() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-12 sm:mb-16 lg:mb-20">
-          <span
-            className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-[#1F4D3A]/5 text-[#1F4D3A] text-xs sm:text-sm font-semibold mb-3 sm:mb-4"
-          >
-            How It Works
-          </span>
-          <h2
-            className="text-3xl sm:text-4xl lg:text-6xl font-extrabold tracking-tight mb-3 sm:mb-4"
-            style={{
-              color: "#1F4D3A",
-              fontFamily: "var(--font-plus-jakarta)",
-            }}
-          >
-            Your story comes to life
-          </h2>
-          <p
-            className="text-sm sm:text-base lg:text-lg max-w-xl mx-auto px-4"
-            style={{ color: "#2D2D2D/70" }}
-          >
-            Four simple steps to preserve who you are — for generations to come.
-          </p>
-        </div>
+        <SectionHeader
+          className="mb-12 sm:mb-16 lg:mb-20"
+          eyebrow="How It Works"
+          title="Your story comes to life"
+          titleClassName="mb-3 sm:mb-4"
+          subtitle="Four simple steps to preserve who you are — for generations to come."
+        />
 
         {/* Desktop: horizontal timeline */}
         <div className="hidden lg:block relative">
