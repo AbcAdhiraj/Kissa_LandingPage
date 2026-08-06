@@ -13,6 +13,42 @@ export function EarlyAccessSection() {
   const [errorMsg, setErrorMsg] = useState("");
   const formRef = useRef<HTMLDivElement>(null);
 
+  // Purely decorative: a confetti failure must never fail the signup.
+  const celebrate = () => {
+    const rect = formRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    const origin = {
+      x: (rect.left + rect.width / 2) / window.innerWidth,
+      y: (rect.top + rect.height / 2) / window.innerHeight,
+    };
+
+    try {
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin,
+        colors: ["#1F4D3A", "#F5C542", "#E87060", "#7EC8E3", "#C4B8D8"],
+      });
+
+      // Second burst after a delay
+      setTimeout(() => {
+        try {
+          confetti({
+            particleCount: 60,
+            spread: 120,
+            origin,
+            colors: ["#F5C542", "#E87060", "#A8C4A0"],
+          });
+        } catch (err: unknown) {
+          console.error("Early access: confetti burst failed", err);
+        }
+      }, 300);
+    } catch (err: unknown) {
+      console.error("Early access: confetti burst failed", err);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes("@")) return;
@@ -27,38 +63,21 @@ export function EarlyAccessSection() {
         body: JSON.stringify({ email }),
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to sign up for early access. Please try again.");
-      }
-
-      // Confetti burst
-      const rect = formRef.current?.getBoundingClientRect();
-      if (rect) {
-        confetti({
-          particleCount: 120,
-          spread: 80,
-          origin: {
-            x: (rect.left + rect.width / 2) / window.innerWidth,
-            y: (rect.top + rect.height / 2) / window.innerHeight,
-          },
-          colors: ["#1F4D3A", "#F5C542", "#E87060", "#7EC8E3", "#C4B8D8"],
+      const data: { error?: string } | null = await res
+        .json()
+        .catch((err: unknown) => {
+          console.error("Early access: could not parse response body", err);
+          return null;
         });
 
-        // Second burst after a delay
-        setTimeout(() => {
-          confetti({
-            particleCount: 60,
-            spread: 120,
-            origin: {
-              x: (rect.left + rect.width / 2) / window.innerWidth,
-              y: (rect.top + rect.height / 2) / window.innerHeight,
-            },
-            colors: ["#F5C542", "#E87060", "#A8C4A0"],
-          });
-        }, 300);
+      if (!res.ok) {
+        throw new Error(
+          data?.error ||
+            `Failed to sign up for early access (status ${res.status}). Please try again.`
+        );
       }
+
+      celebrate();
 
       // Show success screen after short animation
       setTimeout(() => {
@@ -66,7 +85,13 @@ export function EarlyAccessSection() {
         setIsSubmitting(false);
       }, 1000);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "An unexpected error occurred.";
+      console.error("Early access signup failed", err);
+      const message =
+        err instanceof TypeError
+          ? "Could not reach the server. Please check your connection and try again."
+          : err instanceof Error
+            ? err.message
+            : "An unexpected error occurred.";
       setErrorMsg(message);
       setIsSubmitting(false);
     }
